@@ -32,7 +32,12 @@ $RepoPaths = @(
   "$HOME\Documents\GitHub\skills",                       # anthropics (mcp-builder)
   "$HOME\Documents\GitHub\claude-code",                  # anthropics (frontend-design)
   "$HOME\Documents\GitHub\agent-skills",                 # vercel-labs (web-design-guidelines)
-  "$HOME\Documents\GitHub\agent-browser"                 # vercel-labs (agent-browser)
+  "$HOME\Documents\GitHub\agent-browser",                # vercel-labs (agent-browser)
+  "$HOME\Documents\GitHub\awesome-claude-corporate-skills", # w95 (166 skills: finanzas/RRHH/legal/etc.)
+  "$HOME\Documents\GitHub\skills-n8n",                   # n8n-io (clona n8n-io/skills como "skills-n8n")
+  "$HOME\Documents\GitHub\startup-skills",               # bwerneckm
+  "$HOME\Documents\GitHub\logo-designer-skill",          # neonwatty
+  "$HOME\Documents\GitHub\claude-skills"                 # rampstackco (branding/producto)
   # ES: Anade aqui otras rutas si tienes mas repos con SKILL.md
   # EN: Add more paths here if you have other repos with SKILL.md
 )
@@ -129,6 +134,21 @@ foreach ($repo in $RepoPaths) {
         }
         "claude-deep-research-skill" {
             Install-Skill $repo "deep-research"
+            continue
+        }
+        "skills-n8n" {
+            # ES/EN: repo n8n-io/skills clonado como "skills-n8n" para no chocar
+            # con la carpeta "skills" de anthropics/skills (mcp-builder).
+            Get-ChildItem -Path (Join-Path $repo "skills") -Recurse -Filter "SKILL.md" -File -ErrorAction SilentlyContinue | ForEach-Object {
+                Install-Skill $_.Directory.FullName $null
+            }
+            continue
+        }
+        "claude-skills" {
+            # ES/EN: rampstackco/claude-skills -> solo skills/, "dist/" es un duplicado compilado.
+            Get-ChildItem -Path (Join-Path $repo "skills") -Recurse -Filter "SKILL.md" -File -ErrorAction SilentlyContinue | ForEach-Object {
+                Install-Skill $_.Directory.FullName $null
+            }
             continue
         }
         default {

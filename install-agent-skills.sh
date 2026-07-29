@@ -33,6 +33,11 @@ REPO_PATHS=(
   "$HOME/Documents/GitHub/claude-code"                  # anthropics (frontend-design)
   "$HOME/Documents/GitHub/agent-skills"                 # vercel-labs (web-design-guidelines)
   "$HOME/Documents/GitHub/agent-browser"                # vercel-labs (agent-browser)
+  "$HOME/Documents/GitHub/awesome-claude-corporate-skills" # w95 (166 skills, finanzas/RRHH/legal/etc.)
+  "$HOME/Documents/GitHub/skills-n8n"                   # n8n-io (renombra la carpeta a skills-n8n al clonar)
+  "$HOME/Documents/GitHub/startup-skills"               # bwerneckm
+  "$HOME/Documents/GitHub/logo-designer-skill"          # neonwatty
+  "$HOME/Documents/GitHub/claude-skills"                # rampstackco (branding/producto)
   # ES: Añade aquí las rutas reales de "repository" y "superpowers-main (1)"
   #     si también contienen SKILL.md
   # EN: Add here the real paths for "repository" and "superpowers-main (1)"
@@ -87,6 +92,19 @@ for repo in "${REPO_PATHS[@]}"; do
       continue ;;
     agent-browser)
       [ -f "$repo/skills/agent-browser/SKILL.md" ] && install_skill "$repo/skills/agent-browser" "agent-browser"
+      continue ;;
+    skills-n8n)
+      # ES/EN: repo n8n-io/skills; se clona como "skills-n8n" para no chocar
+      # con la carpeta "skills" de anthropics/skills (mcp-builder).
+      while IFS= read -r -d '' skillmd; do
+        install_skill "$(dirname "$skillmd")"
+      done < <(find "$repo/skills" -type f -iname "SKILL.md" -print0 2>/dev/null)
+      continue ;;
+    claude-skills)
+      # ES/EN: rampstackco/claude-skills -> solo skills/, "dist/" es un duplicado compilado.
+      while IFS= read -r -d '' skillmd; do
+        install_skill "$(dirname "$skillmd")"
+      done < <(find "$repo/skills" -type f -iname "SKILL.md" -print0 2>/dev/null)
       continue ;;
   esac
 

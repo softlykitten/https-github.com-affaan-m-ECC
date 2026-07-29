@@ -41,6 +41,11 @@ declare -A COLLECTION_REPOS=(
   [ai-video-generator-claude]="https://github.com/rediumvex/ai-video-generator-claude.git"
   [claude-skill-find-skill]="https://github.com/fockus/claude-skill-find-skill.git"
   [claude-seo]="https://github.com/AgriciDaniel/claude-seo.git"
+  [awesome-claude-corporate-skills]="https://github.com/w95/awesome-claude-corporate-skills.git"
+  [n8n-skills]="https://github.com/n8n-io/skills.git"
+  [startup-skills]="https://github.com/bwerneckm/startup-skills.git"
+  [logo-designer-skill]="https://github.com/neonwatty/logo-designer-skill.git"
+  [rampstackco-claude-skills]="https://github.com/rampstackco/claude-skills.git"
 )
 
 for name in "${!COLLECTION_REPOS[@]}"; do
@@ -98,6 +103,21 @@ if [ -d "$TMP/claude-seo/extensions" ]; then
   for d in "$TMP/claude-seo/extensions"/*/skills/*/; do
     [ -d "$d" ] && install_skill_dir "$d"
   done
+fi
+
+# ES/EN: repos genericos "coleccion completa" -> todos sus SKILL.md.
+for repo in awesome-claude-corporate-skills n8n-skills startup-skills logo-designer-skill; do
+  [ -d "$TMP/$repo" ] || continue
+  while IFS= read -r -d '' skillmd; do
+    install_skill_dir "$(dirname "$skillmd")"
+  done < <(find "$TMP/$repo" -type f -iname "SKILL.md" -print0)
+done
+
+# ES/EN: rampstackco/claude-skills -> solo skills/, "dist/" es un duplicado compilado.
+if [ -d "$TMP/rampstackco-claude-skills/skills" ]; then
+  while IFS= read -r -d '' skillmd; do
+    install_skill_dir "$(dirname "$skillmd")"
+  done < <(find "$TMP/rampstackco-claude-skills/skills" -type f -iname "SKILL.md" -print0)
 fi
 
 # ES/EN: este repo ES la skill (SKILL.md en la raiz), no una coleccion.
